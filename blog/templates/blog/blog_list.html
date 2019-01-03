@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}我的网站{% endblock %}
+{% block nav_blog_active %}active{% endblock %}
+
+{% load staticfiles %}
+{% load comment_tags %}
+{% load likes_tags %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'blog/blog.css' %}">
+{% endblock %}
+
+{# 页面内容 #}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div  class="description bg-white px-3 pt-3 pb-1">
+                    <div class="panel-heading">{% block blog_list_title %} <h1 class="f-17"><strong>博客列表</strong></h1>{% endblock %}</div>
+                </div>
+                <div class="text-secondary font-weight-bold py-2 f-15 choice"></div>
+                <div class="summary-list">
+                        {% for blog in blogs %}
+                            <div class="media mb-1 mb-sm-2 p-2 p-lg-3">
+                                <div class="media-body">
+                                    <h2 class="mt-0 font-weight-bold text-info f-17">
+                                        <a href="{% url 'blog_detail' blog.pk %}" target="_blank">{{ blog.title }}</a>
+                                    </h2>
+                                    <p class="d-none d-sm-block mb-2 f-15">{{ blog.content|striptags|truncatechars:120 }}</p>
+                                    <p class="d-block d-sm-none mb-2 f-15">{{ blog.content|striptags|truncatechars:64 }}</p>
+                                    <div class="text-muted mb-0 f-12">
+                                        <a class="cate" href="{% url 'blogs_with_type' blog.blog_type.pk %}" title="查看当前分类下更多文章">
+                                            <i class="fa fa-book mr-1"></i>{{ blog.blog_type }}</a>
+                                        <span title="日期"><i class="fa fa-calendar-times-o ml-2 mr-1"></i>{{ blog.created_time|date:"Y-m-d" }}</span>
+                                        <span title="阅读数"><i class="fa fa-eye ml-2 mr-1"></i>{{ blog.get_read_num }}</span>
+                                        <span title="评论数"><i class="fa fa-comments ml-2 mr-1"></i>{% get_comment_count blog %}</span>
+                                        <span title="点赞数"><i class="fa fa-thumbs-up ml-2 mr-1"></i>{% get_like_count blog %}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="blog">
+                                <h3>暂无博客，敬请期待</h3>
+                            </div>
+                        {% endfor %}
+
+                </div>
+
+                <div class="text-center mt-2 mt-sm-1 mt-md-0 mb-3 f-16">
+                    {% if page_of_blogs.has_previous %}
+                    <a class="text-success" href="?page={{ page_of_blogs.previous_page_number }}">上一页</a>
+                    {% else %}
+                    <span class="text-secondary" title="当前页已经是首页">上一页</span>
+                    {% endif %}
+                    <span class="mx-2">第&nbsp;{{ page_of_blogs.number }}&nbsp;/&nbsp;{{ page_of_blogs.paginator.num_pages }}&nbsp;页</span>
+                    {% if page_of_blogs.has_next %}
+                    <a class="text-success" href="?page={{ page_of_blogs.next_page_number }}">下一页</a>
+                    {% else %}
+                    <span class="text-secondary" title="当前页已经是末页">下一页</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!--文章分类-->
+                <div class="card border-0 rounded-0 px-3 mb-2 mb-md-3" id="category-card">
+                    <div class="card-header bg-white px-0">
+                        <strong><i class="fa fa-book mr-2 f-17"></i>文章分类</strong>
+                    </div>
+                    <ul class="list-group list-group-flush f-16">
+                        {% for blog_type in blog_types %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center pr-2 py-2">
+                            <a class="category-item" href="{% url 'blogs_with_type' blog_type.pk %}"
+                               title="查看【{{ blog_type.type_name }}】分类下所有文章">{{ blog_type.type_name }}</a>
+                            <span class="badge text-center" title="当前分类下有{{ blog_type.blog_count }}篇文章">{{ blog_type.blog_count }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!--日期归档-->
+                <div class="card border-0 rounded-0 px-3 mb-2 mb-md-3" id="category-card">
+                    <div class="card-header bg-white px-0">
+                        <strong><i class="fa fa-book mr-2 f-17"></i>日期归档</strong>
+                    </div>
+                    <ul class="list-group list-group-flush f-16">
+                        {% for blog_date, blog_count in blog_dates.items %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center pr-2 py-2">
+                            <a class="category-item" href="{% url 'blogs_with_date' blog_date.year blog_date.month %}"
+                               title="查看【{{ blog_date|date:"Y年m月" }}】日期下所有文章">{{ blog_date|date:"Y年m月" }}</a>
+                            <span class="badge text-center" title="当前日期下有{{ blog_count }}篇文章">{{ blog_count }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

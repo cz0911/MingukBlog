@@ -1,0 +1,153 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Bootstrap and font-awesome CSS -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/font-awesome.min.css' %}" >
+    <!-- blog CSS -->
+    <link href="{% static 'bootstrap/css/base.css' %}" rel="stylesheet">
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script type="text/javascript" src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/headroom.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/popper.min.js' %}"></script>
+    {% block header_extends %}{% endblock %}
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-md bg-white fixed-top blog-navbar py-md-0">
+        <a class="navbar-brand d-lg-block" href="{% url 'home' %}">
+
+            <h2>Minguk Blog</h2>
+{#            <h2><strong>Cz</strong>  Blog</h2>#}
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mr-2">
+                    <a class="nav-link py-md-3 {% block nav_home_active %}{% endblock %}" href="{% url 'home' %}"><i class="fa fa-home mr-1"></i>首页<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item mr-2">
+                    <a class="nav-link py-md-3 {% block nav_blog_active %}{% endblock %}" href="{% url 'blog_list' %}"><i class="fa fa-sitemap mr-1"></i>博客</a>
+                </li>
+    {#            <li class="nav-item mr-2">#}
+    {#                <a class="nav-link py-md-3 {% block nav_blog_active %}{% endblock %}" href="{% url 'blog_list' %}"><i class="fa fa-book mr-2 f-17"></i>归档</a>#}
+    {#            </li>#}
+                <li class="nav-item mr-xl-5 ">
+                    <a class="nav-link py-md-3 {% block nav_adout_active %}{% endblock %}" href="{% url 'about' %}"><i class="fa fa-anchor mr-1"></i>关于</a>
+                </li>
+
+            </ul>
+            <ul class="navbar-nav">
+                {% if not user.is_authenticated %}
+                    <li class="nav-item mr-2">
+                        <a class="nav-link py-md-3" href="{% url 'login' %}?from={{ request.get_full_path }}">登录</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link py-md-3" href="{% url 'register' %}?from={{ request.get_full_path }}">注册</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false" title="{{ user.username }}，欢迎回来！">
+                                {% if user.has_nickname %}
+                                    {{ user.username }}({{ user.get_nickname }})
+                                {% else %}
+                                    {{ user.username }}
+                                {% endif %}
+                                <span class="caret"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right mt-0 rounded-0 border-0" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item pl-3" href="{% url 'user_info' %}"><i class="fa fa-fw fa-user text-info mr-2"></i>个人资料</a>
+                            {% if user.is_staff or user.is_superuser %}
+                            <a class="dropdown-item pl-3" href="{% url 'admin:index' %}"><i
+                                    class="fa fa-fw fa-key text-info mr-2"></i>后台管理</a>
+                            {% endif %}
+                            <a class="dropdown-item pl-3" href="{% url 'change_password' %}"><i class="fa fa-fw fa-cog text-info mr-2"></i>修改密码</a>
+                            <a class="dropdown-item pl-3" href="{% url 'logout' %}?from={{ request.get_full_path }}"><i
+                                    class="fa fa-fw fa-sign-out text-info mr-2"></i>退出</a>
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+<main>
+    {% block content %}{% endblock %}
+</main>
+    <!-- footer -->
+{#    <div class="footer">#}
+{#        <div class="website-info">#}
+{#            <p>粤ICP备18152057号-1  Copyright©2018 minguk.top 版权所有</p>#}
+{#            <p>意见反馈或联系我（1012748184@qq.com）</p>#}
+{#        </div>#}
+{#    </div>#}
+
+
+    <footer class="container-fluid mt-4 bg-light">
+        <div class="card-body text-center px-0 f-16">
+            <p class="card-text mb-1">Copyright&nbsp;&copy;&nbsp;2018-2019
+                <a href="https://github.com/cz0911" target="_blank" title="前往博主的Github">cz0911</a>.&nbsp;Powered&nbsp;by&nbsp;Django.
+            </p>
+            <p><a href="http://www.miibeian.gov.cn/" target="_blank">粤ICP备18152057号-1</a></p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal fade" id="login_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <form id="login_medal_form" action="" method="POST">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">登录</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        {% for field in login_modal_form %}
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                        {% endfor %}
+                        <span id="login_medal_tip" class="text-danger"></span>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">登录</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>                        
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $("#login_medal_form").submit(function(event){
+            event.preventDefault();
+            $.ajax({
+                url: '{% url "login_for_medal" %}',
+                type: 'POST',
+                data: $(this).serialize(),
+                cache: false,
+                success: function(data){
+                    if(data['status']=='SUCCESS'){
+                        window.location.reload();
+                    }else{
+                        $('#login_medal_tip').text('用户名或密码不正确');
+                    }
+                }
+            });
+        });
+    </script>
+
+    {% block script_extends %}{% endblock %}
+</body>
+</html>
