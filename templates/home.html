@@ -6,8 +6,8 @@
 {% endblock %}
 
 {% block header_extends %}
-{#    <link rel="stylesheet" href="{% static 'home.css' %}">#}
-    <script type="text/javascript" src="{% static 'bootstrap/js/highcharts.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <script type="text/javascript" src="{% static 'js/highcharts.js' %}"></script>
 {% endblock %}
 
 {% block nav_home_active %}active{% endblock %}
@@ -29,13 +29,19 @@
                   <!-- 轮播图片 -->
                   <div class="carousel-inner">
                     <div class="carousel-item active">
-                      <img class="w-100" src="http://pic.tendcode.com/article/180418/bsblog.png" alt="在 Linux 服务器上使用 Nginx + Gunicorn 部署 Django 项目的正确姿势">
+                        <a href="/blog/1">
+                      <img class="w-100" src="{% static 'img/bsblog.png' %}" alt="在 Linux 服务器上使用 Nginx + Gunicorn 部署 Django 项目的正确姿势">
+                        </a>
                     </div>
                     <div class="carousel-item">
-                      <img class="w-100" src="http://pic.tendcode.com/article/080414/virtualenv.png" alt="Python虚拟环境Virtualenv分别在Windows和Linux上的安装和使用">
+                       <a href="/blog/2">
+                      <img class="w-100" src="{% static 'img/virtualenv.png' %}" alt="Python虚拟环境Virtualenv分别在Windows和Linux上的安装和使用">
+                       </a>
                     </div>
                     <div class="carousel-item">
-                      <img class="w-100" src="http://pic.tendcode.com/article/180415/jiandan.png" alt="煎蛋网妹子图爬虫">
+                      <a href="/blog/3">
+                      <img class="w-100" src="{% static 'img/jiandan.png' %}" alt="煎蛋网妹子图爬虫">
+                      </a>
                     </div>
                   </div>
 
@@ -50,51 +56,12 @@
                 </a>
                 </div>
 
-                <!-- 图表容器 DOM -->
                 <div class="text-secondary font-weight-bold py-2 f-15 choice">
                 </div>
-                <div  class="description bg-white px-3 pt-3 pb-1">
-                <div class="panel-heading"><strong>趋势图</strong></div>
-                <div class="text-secondary font-weight-bold py-2 f-15 choice"></div>
-                <div id="container">
-                </div>
-                </div>
-
-
-            </div>
-            <!-- 右侧导航栏 -->
-            <div class="col-lg-4">
-                <div class="card border-0 rounded-0 px-3 mb-2 mb-md-3 d-none d-lg-block" id="home-card">
-                    <div class="card-header bg-white px-0">
-                        <strong><i class="fa fa-paper-plane mr-2 f-17"></i>个人空间</strong>
-                    </div>
-                    <div class="card-body px-0 pt-3 pb-1">
-                        <div class="row text-center">
-                            <div class="col">
-                                <a href="https://github.com/cz0911" target="_blank" title="进入博主的Github查看博客源码">
-                                    <img style="max-width:40px" alt="博主的github" src="{% static 'bootstrap/img/github.png' %}">
-                                    <p class="mt-2">Github</p>
-                                </a>
-                            </div>
-                            <div class="col">
-                                <a href="https://minguk.top" target="_blank" title="进入博主的网站">
-                                    <img style="max-width:40px" alt="博主的网站" src="{% static 'bootstrap/img/com.png' %}">
-                                    <p class="mt-2">个人网站</p>
-                                </a>
-                            </div>
-                            <div class="col">
-                                <a href="https://weibo.com/" target="_blank" title="进入博主的微博">
-                                    <img style="max-width:40px" alt="博主的微博" src="{% static 'bootstrap/img/weibo.png' %}">
-                                    <p class="mt-2">微博</p>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <!--  今日热门博客  -->
+                <!--  今日热门博客  -->
                 <div class="card border-0 rounded-0 px-3 mb-2 mb-md-3" id="category-card">
                     <div class="card-header bg-white px-0">
-                        <strong><i class="fa fa-book mr-2 f-17"></i>今天热门博客</strong>
+                        <strong><i class="fa fa-bars mr-2 f-17"></i>今天热门博客</strong>
                     </div>
                     <ul class="list-group list-group-flush f-16">
                         {% for hot_data in today_hot_data %}
@@ -110,7 +77,7 @@
             <!--  昨天热门博客  -->
                 <div class="card border-0 rounded-0 px-3 mb-2 mb-md-3" id="category-card">
                     <div class="card-header bg-white px-0">
-                        <strong><i class="fa fa-book mr-2 f-17"></i>昨天热门博客</strong>
+                        <strong><i class="fa fa-bars mr-2 f-17"></i>昨天热门博客</strong>
                     </div>
                     <ul class="list-group list-group-flush f-16">
                         {% for hot_data in yesterday_hot_data %}
@@ -126,7 +93,7 @@
             <!--  7天热门博客  -->
                 <div class="card border-0 rounded-0 px-3 mb-2 mb-md-3" id="category-card">
                     <div class="card-header bg-white px-0">
-                        <strong><i class="fa fa-book mr-2 f-17"></i>七天热门博客</strong>
+                        <strong><i class="fa fa-bars mr-2 f-17"></i>七天热门博客</strong>
                     </div>
                     <ul class="list-group list-group-flush f-16">
                         {% for hot_blog in hot_blogs_for_7_days %}
@@ -139,6 +106,49 @@
                         {% endfor %}
                     </ul>
                 </div>
+
+            </div>
+
+    <!-- 右侧导航栏 -->
+            <div class="col-lg-4">
+             <!-- 个人空间 -->
+                <div class="card border-0 rounded-0 px-3 mb-2 mb-md-3 d-none d-lg-block" id="home-card">
+                    <div class="card-header bg-white px-0">
+                        <strong><i class="fa fa-paper-plane mr-2 f-17"></i>个人空间</strong>
+                    </div>
+                    <div class="card-body px-0 pt-3 pb-1">
+                        <div class="row text-center">
+                            <div class="col">
+                                <a href="https://github.com/cz0911" target="_blank" title="进入博主的Github查看博客源码">
+                                    <img style="max-width:40px" alt="博主的github" src="{% static 'img/github.png' %}">
+                                    <p class="mt-2">Github</p>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a href="https://minguk.top" target="_blank" title="进入博主的网站">
+                                    <img style="max-width:40px" alt="博主的网站" src="{% static 'img/com.png' %}">
+                                    <p class="mt-2">个人网站</p>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a href="https://weibo.com/" target="_blank" title="进入博主的微博">
+                                    <img style="max-width:40px" alt="博主的微博" src="{% static 'img/weibo.png' %}">
+                                    <p class="mt-2">微博</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- 图表容器 DOM -->
+                    <div class="card border-0 rounded-0 px-3 mb-2 mb-md-3" id="category-card">
+                    <div class="card-header bg-white px-0">
+                        <strong><i class="fa fa-signal mr-2 f-17"></i>统计图</strong>
+                    </div>
+                    <div class="text-secondary font-weight-bold py-2 f-15 choice"></div>
+                    <div id="container">
+                    </div>
+                    </div>
+
                 <!--友链-->
                 <div class="d-none d-lg-block">
                     <div class="card border-0 rounded-0 px-3 mb-2 mb-md-3" id="friends-card">

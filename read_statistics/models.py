@@ -12,7 +12,7 @@ class ReadNum(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
-        verbose_name = '阅读量'
+        verbose_name = '阅读数'
         verbose_name_plural = verbose_name
 
 class ReadNumExpandMethod():
@@ -33,6 +33,6 @@ class ReadDetail(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
-        verbose_name = '阅读详情'
+        verbose_name = '阅读记录'
         verbose_name_plural = verbose_name
     
